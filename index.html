@@ -73,7 +73,7 @@ background:#ff3030;
 transition:all .06s linear;
 }
 
-/* 🔥 CONTROLS */
+/* CONTROLS */
 .controls{
 display:flex;
 align-items:center;
@@ -81,7 +81,6 @@ gap:12px;
 margin-top:10px;
 }
 
-/* BUTTON */
 button{
 padding:7px 18px;
 font-size:0.85em;
@@ -152,13 +151,9 @@ audio{display:none;}
 
 <div class="title-container">
 <span id="prev" class="arrow">⬅️</span>
-
 <span class="emoji">🎶</span>
-
 <span id="songTitle" class="rgb-animated">Sunny's Songs</span>
-
 <span class="emoji">🎶</span>
-
 <span id="next" class="arrow">➡️</span>
 </div>
 
@@ -166,7 +161,6 @@ audio{display:none;}
 <div id="songCategory" class="category-container"></div>
 
 <div class="equalizer">
-<!-- ❌ 6 Balken entfernt -->
 <span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span>
 <span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span>
 <span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span>
@@ -175,7 +169,6 @@ audio{display:none;}
 </div>
 </div>
 
-<!-- CONTROLS -->
 <div class="controls">
 <button id="playPauseBtn" style="display:none;">🔊 Play Now</button>
 
@@ -262,13 +255,17 @@ btn.onclick=async()=>{
  }
 };
 
+/* 🔁 EQUALIZER JETZT WIRKLICH ANDERSRUM */
 function animateEqualizer(){
  if(analyser){
   analyser.getByteFrequencyData(data);
 
   bars.forEach((bar,index)=>{
    const reversedIndex = bars.length - 1 - index;
-   const value = data[Math.floor(reversedIndex * data.length / bars.length)] || 0;
+
+   const value = data[
+     Math.floor(reversedIndex * data.length / bars.length)
+   ] || 0;
 
    const height=Math.max(3,Math.min(22,value/10));
    bar.style.height=height+"px";
