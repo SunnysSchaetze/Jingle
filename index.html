@@ -37,6 +37,12 @@ font-size:0.8em;
 margin:0 6px;
 cursor:pointer;
 animation:rainbowText 5s linear infinite;
+transition:transform .2s ease,text-shadow .2s ease;
+}
+
+.arrow:hover{
+transform:scale(1.3);
+text-shadow:0 0 8px currentColor,0 0 16px currentColor;
 }
 
 .emoji{
@@ -59,11 +65,19 @@ font-size:1.2em;
 color:#ff7f00;
 }
 
-/* 🌊 WAVE CANVAS */
-#wave{
-width:320px;
-height:60px;
-margin-top:5px;
+.equalizer{
+display:flex;
+align-items:flex-end;
+gap:2px;
+height:22px;
+}
+
+.bar{
+width:3px;
+height:3px;
+border-radius:999px;
+background:#ff3030;
+transition:all .06s linear;
 }
 
 .controls{
@@ -187,9 +201,15 @@ audio{display:none;}
 
 <div class="category-row">
 <div id="songCategory" class="category-container"></div>
-</div>
 
-<canvas id="wave"></canvas>
+<div class="equalizer">
+<span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span>
+<span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span>
+<span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span>
+<span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span>
+<span class="bar"></span><span class="bar"></span>
+</div>
+</div>
 
 <div class="controls">
 <button id="playPauseBtn" style="display:none;">🔊 Play Now</button>
@@ -221,28 +241,26 @@ const btn=document.getElementById("playPauseBtn");
 const title=document.getElementById("songTitle");
 const category=document.getElementById("songCategory");
 const volume=document.getElementById("volume");
+const bars=document.querySelectorAll(".bar");
 
 audio.volume=1;
-volume.addEventListener("input",()=>audio.volume=volume.value);
+
+volume.addEventListener("input",()=>{
+audio.volume=volume.value;
+});
 
 let ctx, analyser, source, data;
-
-const canvas=document.getElementById("wave");
-const c=canvas.getContext("2d");
-
-canvas.width=320;
-canvas.height=60;
 
 function setupAnalyzer(){
 if(ctx) return;
 ctx=new(window.AudioContext||window.webkitAudioContext)();
 analyser=ctx.createAnalyser();
-analyser.fftSize=256;
+analyser.fftSize=128;
 source=ctx.createMediaElementSource(audio);
 source.connect(analyser);
 analyser.connect(ctx.destination);
 data=new Uint8Array(analyser.frequencyBinCount);
-animateWave();
+animateEqualizer();
 }
 
 function loadSong(i){
@@ -279,37 +297,25 @@ btn.classList.remove("rgb-bg");
 }
 };
 
-function animateWave(){
-requestAnimationFrame(animateWave);
-if(!analyser) return;
-
+function animateEqualizer(){
+if(analyser){
 analyser.getByteFrequencyData(data);
 
-c.clearRect(0,0,canvas.width,canvas.height);
+bars.forEach((bar,index)=>{
+const value = data[Math.floor(index * data.length / bars.length)] || 0;
+const height=Math.max(3,Math.min(22,value/10));
+bar.style.height=height+"px";
 
-c.beginPath();
-
-let sliceWidth = canvas.width / data.length;
-let x = 0;
-
-for(let i=0;i<data.length;i++){
-let v = data[i] / 128.0;
-let y = v * canvas.height/2;
-
-if(i===0){
-c.moveTo(x,y);
+if(height<8){
+bar.style.background="#ff3030";
+}else if(height<14){
+bar.style.background="#ffd000";
 }else{
-c.lineTo(x,y);
+bar.style.background="#00ff66";
 }
-
-x += sliceWidth;
+});
 }
-
-c.strokeStyle="#00ff66";
-c.lineWidth=2;
-c.shadowBlur=10;
-c.shadowColor="#00ff66";
-c.stroke();
+requestAnimationFrame(animateEqualizer);
 }
 </script>
 
