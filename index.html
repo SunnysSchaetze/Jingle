@@ -315,7 +315,9 @@ if(!analyser) return;
 analyser.getByteFrequencyData(data);
 
 bars.forEach((bar,i)=>{
-const v=data[Math.floor(i*data.length/bars.length)]||0;
+// 🔥 HIER IST DIE ÄNDERUNG (gespiegelt)
+const v=data[Math.floor((bars.length - 1 - i) * data.length / bars.length)] || 0;
+
 const h=Math.max(3,Math.min(22,v/10));
 
 bar.style.height=h+"px";
