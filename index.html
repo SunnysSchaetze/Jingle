@@ -117,7 +117,6 @@ background:transparent;
 cursor:pointer;
 }
 
-/* TRACK */
 #volume::-webkit-slider-runnable-track{
 height:6px;
 border-radius:10px;
@@ -125,48 +124,17 @@ background:#000;
 animation:rainbowBG 5s linear infinite;
 }
 
-#volume::-moz-range-track{
-height:6px;
-border-radius:10px;
-background:#000;
-animation:rainbowBG 5s linear infinite;
-}
-
-/* 🟠 + RGB LIKE ARROWS */
 #volume::-webkit-slider-thumb{
 -webkit-appearance:none;
 appearance:none;
 width:16px;
 height:16px;
 border-radius:50%;
-
-/* orange base */
 background:#ff9800;
 border:2px solid #000;
-
-/* RGB glow like arrows */
 animation:rainbowText 5s linear infinite;
-box-shadow:
-0 0 8px currentColor,
-0 0 16px currentColor,
-0 0 24px currentColor;
-
+box-shadow:0 0 8px currentColor,0 0 16px currentColor,0 0 24px currentColor;
 margin-top:-4px;
-}
-
-#volume::-moz-range-thumb{
-width:16px;
-height:16px;
-border-radius:50%;
-
-background:#ff9800;
-border:2px solid #000;
-
-animation:rainbowText 5s linear infinite;
-box-shadow:
-0 0 8px currentColor,
-0 0 16px currentColor,
-0 0 24px currentColor;
 }
 
 audio{display:none;}
@@ -205,6 +173,16 @@ audio{display:none;}
 0%,100%{transform:translateY(0);}
 50%{transform:translateY(-4px);}
 }
+
+/* 🌈 MULTICOLOR EQ */
+.eq-red{background:#ff0033;}
+.eq-orange{background:#ff7a00;}
+.eq-yellow{background:#ffd000;}
+.eq-green{background:#00ff66;}
+.eq-cyan{background:#00ffff;}
+.eq-blue{background:#0066ff;}
+.eq-purple{background:#a800ff;}
+.eq-pink{background:#ff4fd8;}
 </style>
 </head>
 
@@ -324,9 +302,19 @@ const v=data[Math.floor(i*data.length/bars.length)]||0;
 const h=Math.max(3,Math.min(22,v/10));
 bar.style.height=h+"px";
 
-if(h<8) bar.style.background="#ff3030";
-else if(h<14) bar.style.background="#ffd000";
-else bar.style.background="#00ff66";
+bar.classList.remove(
+"eq-red","eq-orange","eq-yellow","eq-green",
+"eq-cyan","eq-blue","eq-purple","eq-pink"
+);
+
+if(h<5) bar.classList.add("eq-red");
+else if(h<8) bar.classList.add("eq-orange");
+else if(h<11) bar.classList.add("eq-yellow");
+else if(h<14) bar.classList.add("eq-green");
+else if(h<17) bar.classList.add("eq-cyan");
+else if(h<19) bar.classList.add("eq-blue");
+else if(h<21) bar.classList.add("eq-purple");
+else bar.classList.add("eq-pink");
 });
 }
 </script>
