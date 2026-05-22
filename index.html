@@ -103,21 +103,26 @@ button.rgb-bg{
 animation:rainbowBG 5s linear infinite;
 }
 
-/* 🎚️ RGB VOLUME SLIDER */
+/* 🎚️ VOLUME */
 #volume{
 width:120px;
 cursor:pointer;
-animation:rainbowText 5s linear infinite;
 }
 
-/* Chrome / Edge / Safari Track */
+/* 🌈 TRACK */
 #volume::-webkit-slider-runnable-track{
 height:6px;
 border-radius:10px;
 animation:rainbowBG 5s linear infinite;
 }
 
-/* Thumb */
+#volume::-moz-range-track{
+height:6px;
+border-radius:10px;
+animation:rainbowBG 5s linear infinite;
+}
+
+/* 🌈 THUMB (DER PUNKT ZUM ZIEHEN) */
 #volume::-webkit-slider-thumb{
 appearance:none;
 width:14px;
@@ -125,15 +130,9 @@ height:14px;
 border-radius:50%;
 background:#fff;
 border:2px solid #000;
-box-shadow:0 0 8px currentColor;
 cursor:pointer;
-}
-
-/* Firefox Track */
-#volume::-moz-range-track{
-height:6px;
-border-radius:10px;
-animation:rainbowBG 5s linear infinite;
+animation:rainbowText 5s linear infinite;
+box-shadow:0 0 8px currentColor,0 0 12px currentColor;
 }
 
 #volume::-moz-range-thumb{
@@ -143,6 +142,8 @@ border-radius:50%;
 background:#fff;
 border:2px solid #000;
 cursor:pointer;
+animation:rainbowText 5s linear infinite;
+box-shadow:0 0 8px currentColor,0 0 12px currentColor;
 }
 
 audio{display:none;}
