@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Sunny's Songs Playlist</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <style>
         html, body {
             height: 100%;
@@ -29,10 +30,33 @@
             white-space: nowrap;
         }
 
+        .category-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
         .category-container {
             font-size: 1.2em;
-            margin-bottom: 20px;
             color: #ff7f00;
+        }
+
+        .equalizer {
+            display: flex;
+            align-items: flex-end;
+            gap: 3px;
+            height: 32px;
+            width: 45px;
+        }
+
+        .bar {
+            width: 5px;
+            height: 5px;
+            border-radius: 2px;
+            background: red;
+            transition: height 0.1s linear;
         }
 
         .rgb-animated {
@@ -78,7 +102,7 @@
             max-width: 250px;
             transition: all 0.5s ease;
             background-color: #FFA500;
-            box-shadow: 0 0 8px rgba(255, 165, 0, 0.8);
+            box-shadow: 0 0 8px rgba(255,165,0,.8);
         }
 
         button.rgb-bg {
@@ -87,8 +111,9 @@
 
         button:hover {
             transform: scale(1.05);
-            box-shadow: 0 0 16px rgba(255, 165, 0, 1),
-                        0 0 24px rgba(255, 165, 0, 1);
+            box-shadow:
+                0 0 16px rgba(255,165,0,1),
+                0 0 24px rgba(255,165,0,1);
         }
 
         @keyframes glowRGB {
@@ -102,7 +127,7 @@
         }
 
         @keyframes dance {
-            0%, 100% {
+            0%,100% {
                 transform: translateY(0) rotate(0deg) scale(1);
             }
             25% {
@@ -127,6 +152,7 @@
         }
 
         @media (max-width: 500px) {
+
             .title-container {
                 font-size: 1.3em;
             }
@@ -151,9 +177,11 @@
         }
     </style>
 </head>
+
 <body>
 
     <div class="title-container">
+
         <span class="arrow rgb-animated" id="prev">⬅️</span>
 
         <span class="emoji">🎶</span>
@@ -165,60 +193,67 @@
         <span class="emoji">🎶</span>
 
         <span class="arrow rgb-animated" id="next">➡️</span>
+
     </div>
 
-    <div class="category-container" id="songCategory"></div>
+    <div class="category-row">
 
-    <button id="playPauseBtn" style="display: none;">
+        <div class="category-container" id="songCategory"></div>
+
+        <div class="equalizer">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </div>
+
+    </div>
+
+    <button id="playPauseBtn" style="display:none;">
         🔊 Play Now
     </button>
 
     <audio id="audio"></audio>
 
     <script>
+
         const songs = [
             {
                 title: "Der kleine Jingle",
                 file: "Jingle.aac",
                 category: "Sunny's Schätze"
             },
-
             {
                 title: "Cha-La Head-Cha-La",
                 file: "Cha-La Head-Cha-La.aac",
                 category: "Dragonball Z"
             },
-
             {
                 title: "Die Legende",
                 file: "Die Legende.aac",
                 category: "One Piece"
             },
-
             {
                 title: "Leb deinen Traum",
                 file: "Leb deinen Traum.aac",
                 category: "Digimon"
             },
-
             {
                 title: "Frei wie der Wind",
                 file: "Frei wie der Wind.aac",
                 category: "Monster Rancher"
             },
-
             {
                 title: "Last Unicorn",
                 file: "Last Unicorn.aac",
                 category: "Das Letzte Einhorn"
             },
-
             {
                 title: "Leaves from the Vine",
                 file: "Leaves from the Vine.aac",
                 category: "Avatar – Der Herr der Elemente"
             },
-
             {
                 title: "Heidruns Schlaflied",
                 file: "Heidruns Schlaflied.aac",
@@ -235,58 +270,172 @@
         const prevBtn = document.getElementById('prev');
         const nextBtn = document.getElementById('next');
 
+        const bars = document.querySelectorAll('.bar');
+
+        let audioContext = null;
+        let analyser = null;
+        let source = null;
+        let dataArray = null;
+
+        function setupAudioAnalyzer() {
+
+            if (audioContext) return;
+
+            audioContext =
+                new (window.AudioContext ||
+                     window.webkitAudioContext)();
+
+            analyser = audioContext.createAnalyser();
+            analyser.fftSize = 64;
+
+            source =
+                audioContext.createMediaElementSource(audio);
+
+            source.connect(analyser);
+            analyser.connect(audioContext.destination);
+
+            dataArray =
+                new Uint8Array(analyser.frequencyBinCount);
+
+            animateEqualizer();
+        }
+
         function loadSong(index) {
+
             currentIndex = index;
 
             const song = songs[index];
+
+            audio.pause();
 
             audio.src = song.file;
 
             songTitle.textContent = song.title;
             songCategory.textContent = song.category;
 
-            audio.pause();
-
             btn.style.display = "block";
             btn.disabled = false;
             btn.textContent = "🔊 Play Now";
-
             btn.classList.remove('rgb-bg');
+
+            resetEqualizer();
         }
 
-        btn.addEventListener('click', () => {
+        function resetEqualizer() {
+
+            bars.forEach(bar => {
+
+                bar.style.height = "5px";
+                bar.style.background = "#ff0000";
+
+            });
+        }
+
+        btn.addEventListener('click', async () => {
+
             if (audio.paused) {
+
+                setupAudioAnalyzer();
+
+                if (audioContext.state === "suspended") {
+                    await audioContext.resume();
+                }
+
                 audio.play();
 
                 btn.textContent = "⏸️ Pause";
-
                 btn.classList.add('rgb-bg');
+
             } else {
+
                 audio.pause();
 
                 btn.textContent = "🔊 Play Now";
+                btn.classList.remove('rgb-bg');
             }
         });
 
         prevBtn.addEventListener('click', () => {
+
             if (currentIndex === -1) {
+
                 loadSong(songs.length - 1);
+
             } else {
+
                 loadSong(
-                    (currentIndex - 1 + songs.length) % songs.length
+                    (currentIndex - 1 + songs.length)
+                    % songs.length
                 );
             }
         });
 
         nextBtn.addEventListener('click', () => {
+
             if (currentIndex === -1) {
+
                 loadSong(0);
+
             } else {
+
                 loadSong(
-                    (currentIndex + 1) % songs.length
+                    (currentIndex + 1)
+                    % songs.length
                 );
             }
         });
+
+        function animateEqualizer() {
+
+            if (!analyser) {
+                requestAnimationFrame(animateEqualizer);
+                return;
+            }
+
+            analyser.getByteFrequencyData(dataArray);
+
+            bars.forEach((bar, index) => {
+
+                const value =
+                    dataArray[index * 2] || 0;
+
+                const height =
+                    Math.max(5, value / 3);
+
+                bar.style.height = height + "px";
+
+                if (height < 12) {
+
+                    bar.style.background = "#ff0000";
+
+                } else if (height < 24) {
+
+                    bar.style.background = "#ffff00";
+
+                } else {
+
+                    bar.style.background = "#00ff00";
+                }
+            });
+
+            requestAnimationFrame(animateEqualizer);
+        }
+
+        audio.addEventListener('pause', () => {
+
+            if (audio.ended) return;
+
+            resetEqualizer();
+        });
+
+        audio.addEventListener('ended', () => {
+
+            btn.textContent = "🔊 Play Now";
+            btn.classList.remove('rgb-bg');
+
+            resetEqualizer();
+        });
+
     </script>
 
 </body>
