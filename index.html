@@ -32,7 +32,6 @@ margin-bottom:10px;
 animation:rainbowText 5s linear infinite;
 }
 
-/* 🌈 RGB PFEILE */
 .arrow{
 font-size:0.8em;
 margin:0 6px;
@@ -75,7 +74,6 @@ background:#ff3030;
 transition:all .06s linear;
 }
 
-/* CONTROLS */
 .controls{
 display:flex;
 align-items:center;
@@ -103,26 +101,26 @@ button.rgb-bg{
 animation:rainbowBG 5s linear infinite;
 }
 
-/* 🎚️ VOLUME */
 #volume{
 width:120px;
 cursor:pointer;
+background:transparent;
 }
 
-/* 🌈 TRACK */
 #volume::-webkit-slider-runnable-track{
 height:6px;
 border-radius:10px;
+background:#000;
 animation:rainbowBG 5s linear infinite;
 }
 
 #volume::-moz-range-track{
 height:6px;
 border-radius:10px;
+background:#000;
 animation:rainbowBG 5s linear infinite;
 }
 
-/* 🌈 THUMB (DER PUNKT ZUM ZIEHEN) */
 #volume::-webkit-slider-thumb{
 appearance:none;
 width:14px;
@@ -189,13 +187,9 @@ audio{display:none;}
 
 <div class="title-container">
 <span id="prev" class="arrow">⬅️</span>
-
 <span class="emoji">🎶</span>
-
 <span id="songTitle" class="rgb-animated">Sunny's Songs</span>
-
 <span class="emoji">🎶</span>
-
 <span id="next" class="arrow">➡️</span>
 </div>
 
@@ -246,79 +240,76 @@ const bars=document.querySelectorAll(".bar");
 audio.volume=1;
 
 volume.addEventListener("input",()=>{
- audio.volume=volume.value;
+audio.volume=volume.value;
 });
 
 let ctx, analyser, source, data;
 
 function setupAnalyzer(){
- if(ctx) return;
- ctx=new(window.AudioContext||window.webkitAudioContext)();
- analyser=ctx.createAnalyser();
- analyser.fftSize=128;
- source=ctx.createMediaElementSource(audio);
- source.connect(analyser);
- analyser.connect(ctx.destination);
- data=new Uint8Array(analyser.frequencyBinCount);
- animateEqualizer();
+if(ctx) return;
+ctx=new(window.AudioContext||window.webkitAudioContext)();
+analyser=ctx.createAnalyser();
+analyser.fftSize=128;
+source=ctx.createMediaElementSource(audio);
+source.connect(analyser);
+analyser.connect(ctx.destination);
+data=new Uint8Array(analyser.frequencyBinCount);
+animateEqualizer();
 }
 
 function loadSong(i){
- currentIndex=i;
- const s=songs[i];
- audio.pause();
- audio.src=s.file;
- title.textContent=s.title;
- category.textContent=s.category;
- btn.style.display="block";
- btn.textContent="🔊 Play Now";
- btn.classList.remove("rgb-bg");
+currentIndex=i;
+const s=songs[i];
+audio.pause();
+audio.src=s.file;
+title.textContent=s.title;
+category.textContent=s.category;
+btn.style.display="block";
+btn.textContent="🔊 Play Now";
+btn.classList.remove("rgb-bg");
 }
 
 document.getElementById("prev").onclick=()=>{
- loadSong(currentIndex===-1?songs.length-1:(currentIndex-1+songs.length)%songs.length);
+loadSong(currentIndex===-1?songs.length-1:(currentIndex-1+songs.length)%songs.length);
 };
 
 document.getElementById("next").onclick=()=>{
- loadSong(currentIndex===-1?0:(currentIndex+1)%songs.length);
+loadSong(currentIndex===-1?0:(currentIndex+1)%songs.length);
 };
 
 btn.onclick=async()=>{
- if(audio.paused){
-   setupAnalyzer();
-   if(ctx.state==="suspended") await ctx.resume();
-   audio.play();
-   btn.textContent="⏸️ Pause";
-   btn.classList.add("rgb-bg");
- }else{
-   audio.pause();
-   btn.textContent="🔊 Play Now";
-   btn.classList.remove("rgb-bg");
- }
+if(audio.paused){
+setupAnalyzer();
+if(ctx.state==="suspended") await ctx.resume();
+audio.play();
+btn.textContent="⏸️ Pause";
+btn.classList.add("rgb-bg");
+}else{
+audio.pause();
+btn.textContent="🔊 Play Now";
+btn.classList.remove("rgb-bg");
+}
 };
 
 function animateEqualizer(){
- if(analyser){
-  analyser.getByteFrequencyData(data);
+if(analyser){
+analyser.getByteFrequencyData(data);
 
-  bars.forEach((bar,index)=>{
-   const value = data[
-     Math.floor(index * data.length / bars.length)
-   ] || 0;
+bars.forEach((bar,index)=>{
+const value = data[Math.floor(index * data.length / bars.length)] || 0;
+const height=Math.max(3,Math.min(22,value/10));
+bar.style.height=height+"px";
 
-   const height=Math.max(3,Math.min(22,value/10));
-   bar.style.height=height+"px";
-
-   if(height<8){
-     bar.style.background="#ff3030";
-   }else if(height<14){
-     bar.style.background="#ffd000";
-   }else{
-     bar.style.background="#00ff66";
-   }
-  });
- }
- requestAnimationFrame(animateEqualizer);
+if(height<8){
+bar.style.background="#ff3030";
+}else if(height<14){
+bar.style.background="#ffd000";
+}else{
+bar.style.background="#00ff66";
+}
+});
+}
+requestAnimationFrame(animateEqualizer);
 }
 </script>
 
