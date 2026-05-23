@@ -29,7 +29,15 @@ column-gap:6px;
 font-size:1.1em;
 margin-bottom:25px;
 }
-      
+
+.start-centered{
+position:fixed;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+z-index:100;
+}
+          
 .rgb-animated{
 animation:rainbowText 5s linear infinite;
 }
@@ -206,7 +214,7 @@ audio{display:none;}
 
 <body>
 
-<div class="title-container">
+<div class="title-container start-centered" id="titleContainer">
 <span id="prev" class="arrow">⬅️</span>
 <span class="emoji">🎶</span>
 <span id="songTitle" class="rgb-animated">Sunny's Songs</span>
@@ -285,6 +293,9 @@ animate();
 }
 
 function loadSong(i){
+
+titleContainer.classList.remove("start-centered");
+
 currentIndex=i;
 const s=songs[i];
 
