@@ -286,6 +286,8 @@ function loadSong(i){
 currentIndex=i;
 const s=songs[i];
 
+title.style.minWidth="0";
+
 audio.pause();
 audio.src=s.file;
 
