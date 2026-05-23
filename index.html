@@ -258,7 +258,15 @@ const volumeContainer=document.getElementById("volumeContainer");
 const bars=document.querySelectorAll(".bar");
 
 audio.volume=1;
-volume.addEventListener("input",()=>audio.volume=volume.value);
+
+volume.addEventListener("input",()=>{
+audio.volume=volume.value;
+});
+
+audio.addEventListener("ended",()=>{
+btn.textContent="▶️ Play";
+btn.classList.remove("rgb-bg");
+});
 
 let ctx, analyser, source, data;
 
