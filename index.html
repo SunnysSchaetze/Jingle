@@ -226,7 +226,7 @@ audio{display:none;}
 <div class="controls">
 <button id="playPauseBtn" style="display:none;">🔊 Play Now</button>
 
-<div>
+<div id="volumeContainer" style="display:none;">
 <span>🔉</span>
 <input id="volume" type="range" min="0" max="1" step="0.01" value="1">
 <span>🔊</span>
@@ -254,6 +254,7 @@ const btn=document.getElementById("playPauseBtn");
 const title=document.getElementById("songTitle");
 const category=document.getElementById("songCategory");
 const volume=document.getElementById("volume");
+const volumeContainer=document.getElementById("volumeContainer");
 const bars=document.querySelectorAll(".bar");
 
 audio.volume=1;
@@ -276,11 +277,16 @@ animate();
 function loadSong(i){
 currentIndex=i;
 const s=songs[i];
+
 audio.pause();
 audio.src=s.file;
+
 title.textContent=s.title;
 category.textContent=s.category;
+
 btn.style.display="block";
+volumeContainer.style.display="block";
+
 btn.textContent="🔊 Play Now";
 btn.classList.remove("rgb-bg");
 }
