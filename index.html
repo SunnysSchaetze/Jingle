@@ -329,14 +329,19 @@ analyser.getByteFrequencyData(data);
 
 bars.forEach((bar,i)=>{
 // 🔥 HIER IST DIE ÄNDERUNG (gespiegelt)
-const center=(bars.length-1)/2;
-const distance=Math.abs(i-center);
+const mirror=Math.min(i,bars.length-1-i);
 
-const mirroredIndex=Math.floor(
-(center-distance)/center*(data.length-1)
-);
+const mapping=[
+2,4,6,9,13,18,24,32,
+32,24,18,13,9,6,4,2
+];
 
-const v=data[mirroredIndex] || 0;
+let v=data[mapping[i]] || 0;
+
+// mittlere 4 Balken stärker machen
+if(i>=6 && i<=9){
+    v*=1.8;
+}
 
 const h=Math.max(3,Math.min(22,v/10));
 
