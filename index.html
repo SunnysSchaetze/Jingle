@@ -24,16 +24,11 @@ text-align:center;
 display:flex;
 align-items:center;
 justify-content:center;
+width:100%;
 font-size:1.1em;
 margin-bottom:25px;
 }
-    
-#songTitle{
-display:inline-block;
-min-width:200px;
-text-align:center;
-}
-    
+      
 .rgb-animated{
 animation:rainbowText 5s linear infinite;
 }
@@ -292,7 +287,6 @@ function loadSong(i){
 currentIndex=i;
 const s=songs[i];
 
-title.style.minWidth="0";
 
 audio.pause();
 audio.src=s.file;
