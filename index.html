@@ -13,14 +13,14 @@ html, body {
   font-family: sans-serif;
 }
 
-/* 🔥 alles zentrieren */
+/* 🔥 CENTER */
 body {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-/* 🔥 Haupt-Container */
+/* APP WRAPPER */
 .app {
   display: flex;
   flex-direction: column;
@@ -44,7 +44,6 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  z-index: 100;
 }
 
 .rgb-animated {
@@ -53,11 +52,9 @@ body {
 
 .arrow {
   font-size: 0.8em;
-  margin: 0 6px;
   cursor: pointer;
   animation: rainbowText 5s linear infinite;
   text-shadow: 0 0 8px currentColor, 0 0 16px currentColor;
-  transition: transform .2s ease;
 }
 
 .arrow:hover {
@@ -67,8 +64,7 @@ body {
 .emoji {
   display: inline-block;
   margin: 0 5px;
-  font-size: 0.9em;
-  animation: glowRGB 3s linear infinite, dance 1.5s ease-in-out infinite;
+  animation: glowRGB 3s linear infinite, dance 1.5s infinite;
 }
 
 /* CATEGORY */
@@ -76,7 +72,6 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   gap: 10px;
   margin-bottom: 20px;
 }
@@ -101,15 +96,15 @@ body {
   transition: all .06s linear;
 }
 
-/* COLORS */
-.eq-red { background:#ff0033; box-shadow:0 0 6px #ff0033; }
-.eq-orange { background:#ff7a00; box-shadow:0 0 6px #ff7a00; }
-.eq-yellow { background:#ffd000; box-shadow:0 0 6px #ffd000; }
-.eq-green { background:#00ff66; box-shadow:0 0 6px #00ff66; }
-.eq-cyan { background:#00ffff; box-shadow:0 0 6px #00ffff; }
-.eq-blue { background:#0066ff; box-shadow:0 0 6px #0066ff; }
-.eq-purple { background:#a800ff; box-shadow:0 0 6px #a800ff; }
-.eq-pink { background:#ff4fd8; box-shadow:0 0 6px #ff4fd8; }
+/* EQ COLORS */
+.eq-red{background:#ff0033; box-shadow:0 0 6px #ff0033;}
+.eq-orange{background:#ff7a00; box-shadow:0 0 6px #ff7a00;}
+.eq-yellow{background:#ffd000; box-shadow:0 0 6px #ffd000;}
+.eq-green{background:#00ff66; box-shadow:0 0 6px #00ff66;}
+.eq-cyan{background:#00ffff; box-shadow:0 0 6px #00ffff;}
+.eq-blue{background:#0066ff; box-shadow:0 0 6px #0066ff;}
+.eq-purple{background:#a800ff; box-shadow:0 0 6px #a800ff;}
+.eq-pink{background:#ff4fd8; box-shadow:0 0 6px #ff4fd8;}
 
 /* CONTROLS */
 .controls {
@@ -120,71 +115,95 @@ body {
   margin-top: 10px;
 }
 
+/* BUTTON */
 button {
   padding: 7px 18px;
-  font-size: 0.85em;
   border: none;
   border-radius: 8px;
   cursor: pointer;
   font-weight: bold;
   background: #FFA500;
-  transition: transform .25s ease, box-shadow .25s ease;
+  transition: .2s;
 }
 
 button:hover {
   transform: scale(1.08);
-  box-shadow: 0 0 12px #FFA500, 0 0 24px #FFA500;
+  box-shadow: 0 0 12px #FFA500;
 }
 
 button.rgb-bg {
   animation: rainbowBG 5s linear infinite;
 }
 
-/* VOLUME */
-#volume {
-  width: 120px;
+/* 🎛️ VOLUME RGB */
+.volume-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
-/* AUDIO hidden */
-audio { display: none; }
+#volume {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 140px;
+  background: transparent;
+  cursor: pointer;
+}
+
+/* TRACK */
+#volume::-webkit-slider-runnable-track {
+  height: 6px;
+  border-radius: 10px;
+  animation: rainbowBG 5s linear infinite;
+}
+
+/* THUMB */
+#volume::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #ff9800;
+  border: 2px solid #000;
+  animation: rainbowText 5s linear infinite;
+  box-shadow: 0 0 10px currentColor;
+  margin-top: -5px;
+}
+
+/* AUDIO */
+audio { display:none; }
 
 /* ANIMATIONS */
 @keyframes rainbowText {
-  0% { color:#ff0000; }
-  16% { color:#ff7f00; }
-  32% { color:#ffff00; }
-  48% { color:#00ff00; }
-  64% { color:#00ffff; }
-  80% { color:#8b00ff; }
-  100% { color:#ff0000; }
+  0%{color:#ff0000;}
+  16%{color:#ff7f00;}
+  32%{color:#ffff00;}
+  48%{color:#00ff00;}
+  64%{color:#00ffff;}
+  80%{color:#8b00ff;}
+  100%{color:#ff0000;}
 }
 
 @keyframes rainbowBG {
-  0% { background:#ff0000; }
-  16% { background:#ff7f00; }
-  32% { background:#ffff00; }
-  48% { background:#00ff00; }
-  64% { background:#00ffff; }
-  80% { background:#8b00ff; }
-  100% { background:#ff0000; }
+  0%{background:#ff0000;}
+  16%{background:#ff7f00;}
+  32%{background:#ffff00;}
+  48%{background:#00ff00;}
+  64%{background:#00ffff;}
+  80%{background:#8b00ff;}
+  100%{background:#ff0000;}
 }
 
 @keyframes glowRGB {
-  0% { text-shadow:0 0 8px red,0 0 16px red; }
-  16% { text-shadow:0 0 8px orange,0 0 16px orange; }
-  32% { text-shadow:0 0 8px yellow,0 0 16px yellow; }
-  48% { text-shadow:0 0 8px lime,0 0 16px lime; }
-  64% { text-shadow:0 0 8px cyan,0 0 16px cyan; }
-  80% { text-shadow:0 0 8px violet,0 0 16px violet; }
-  100% { text-shadow:0 0 8px red,0 0 16px red; }
+  0%{text-shadow:0 0 8px red;}
+  50%{text-shadow:0 0 12px cyan;}
+  100%{text-shadow:0 0 8px red;}
 }
 
 @keyframes dance {
-  0% { transform: translateY(0) rotate(-8deg) scale(1); }
-  25% { transform: translateY(-8px) rotate(8deg) scale(1.15); }
-  50% { transform: translateY(0) rotate(-8deg) scale(1); }
-  75% { transform: translateY(-6px) rotate(8deg) scale(1.1); }
-  100% { transform: translateY(0) rotate(-8deg) scale(1); }
+  0%{transform:translateY(0) rotate(-8deg);}
+  50%{transform:translateY(-6px) rotate(8deg);}
+  100%{transform:translateY(0) rotate(-8deg);}
 }
 </style>
 </head>
@@ -215,10 +234,10 @@ audio { display: none; }
   <div class="controls">
     <button id="playPauseBtn" style="display:none;">🔊 Play Now</button>
 
-    <div id="volumeContainer" style="display:none;">
-      <span>🔉</span>
+    <div id="volumeContainer" style="display:none;" class="volume-wrap">
+      <span class="emoji">🔉</span>
       <input id="volume" type="range" min="0" max="1" step="0.01" value="1">
-      <span>🔊</span>
+      <span class="emoji">🔊</span>
     </div>
   </div>
 
@@ -251,18 +270,13 @@ const titleContainer=document.getElementById("titleContainer");
 
 audio.volume=1;
 
-volume.addEventListener("input",()=> audio.volume=volume.value);
-
-audio.addEventListener("ended",()=>{
-btn.textContent="▶️ Play";
-btn.classList.remove("rgb-bg");
-});
+volume.addEventListener("input",()=>audio.volume=volume.value);
 
 let ctx, analyser, source, data;
 
 function setupAnalyzer(){
 if(ctx) return;
-ctx=new(window.AudioContext||window.webkitAudioContext)();
+ctx=new AudioContext();
 analyser=ctx.createAnalyser();
 analyser.fftSize=128;
 source=ctx.createMediaElementSource(audio);
@@ -285,7 +299,7 @@ title.textContent=s.title;
 category.textContent=s.category;
 
 btn.style.display="block";
-volumeContainer.style.display="block";
+volumeContainer.style.display="flex";
 
 btn.textContent="🔊 Play Now";
 btn.classList.remove("rgb-bg");
@@ -323,12 +337,10 @@ bars.forEach((bar,i)=>{
 const mapping=[2,4,6,9,13,18,24,32,32,24,18,13,9,6,4,2];
 let v=data[mapping[i]]||0;
 
-if(i>=6 && i<=9) v*=1.0;
-
 const h=Math.max(3,Math.min(22,v/10));
 bar.style.height=h+"px";
 
-bar.classList.remove("eq-red","eq-orange","eq-yellow","eq-green","eq-cyan","eq-blue","eq-purple","eq-pink");
+bar.className="bar ";
 
 if(h<5) bar.classList.add("eq-red");
 else if(h<8) bar.classList.add("eq-orange");
