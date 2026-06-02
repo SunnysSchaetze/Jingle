@@ -12,7 +12,6 @@ html {
     box-sizing: border-box;
 }
 
-/* FIX: kein kaputtes Flex-Centering mehr */
 body {
     margin: 0;
     min-height: calc(100vh - 20px);
@@ -23,12 +22,10 @@ body {
     overflow: hidden;
 
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
 }
 
-/* WRAPPER für sauberen Inhalt */
 .main {
     width: 100%;
     max-width: 900px;
@@ -93,30 +90,30 @@ font-size:1.2em;
 color:#ff7f00;
 }
 
-/* EQ */
+/* ===== EQ ===== */
 .equalizer{
 display:flex;
 align-items:flex-end;
 gap:2px;
 height:22px;
+margin-top:10px;
 }
 
 .bar{
 width:3px;
 height:3px;
 border-radius:999px;
-transition:all .06s linear;
+transition:all .05s linear;
 }
 
-/* COLORS */
 .eq-red{background:#ff0033; box-shadow:0 0 6px #ff0033;}
-.eq-orange{background:#ff7a00;}
-.eq-yellow{background:#ffd000;}
-.eq-green{background:#00ff66;}
-.eq-cyan{background:#00ffff;}
-.eq-blue{background:#0066ff;}
-.eq-purple{background:#a800ff;}
-.eq-pink{background:#ff4fd8;}
+.eq-orange{background:#ff7a00; box-shadow:0 0 6px #ff7a00;}
+.eq-yellow{background:#ffd000; box-shadow:0 0 6px #ffd000;}
+.eq-green{background:#00ff66; box-shadow:0 0 6px #00ff66;}
+.eq-cyan{background:#00ffff; box-shadow:0 0 6px #00ffff;}
+.eq-blue{background:#0066ff; box-shadow:0 0 6px #0066ff;}
+.eq-purple{background:#a800ff; box-shadow:0 0 6px #a800ff;}
+.eq-pink{background:#ff4fd8; box-shadow:0 0 6px #ff4fd8;}
 
 /* CONTROLS */
 .controls{
@@ -145,15 +142,41 @@ button.rgb-bg{
 animation:rainbowBG 5s linear infinite;
 }
 
-/* VOLUME */
+/* ===== RGB VOLUME SLIDER ===== */
 #volume{
-width:120px;
+-webkit-appearance:none;
+appearance:none;
+width:140px;
+height:6px;
+border-radius:10px;
+background:linear-gradient(90deg,red,orange,yellow,green,cyan,blue,purple,red);
+outline:none;
+cursor:pointer;
+box-shadow:0 0 10px #ff9800;
 }
 
-/* AUDIO HIDDEN */
+#volume::-webkit-slider-thumb{
+-webkit-appearance:none;
+width:16px;
+height:16px;
+border-radius:50%;
+background:white;
+border:2px solid black;
+box-shadow:0 0 10px red,0 0 20px blue;
+}
+
+#volume::-moz-range-thumb{
+width:16px;
+height:16px;
+border-radius:50%;
+background:white;
+border:2px solid black;
+}
+
+/* AUDIO */
 audio{display:none;}
 
-/* ANIMATIONS (UNVERÄNDERT) */
+/* ANIMATIONEN */
 @keyframes rainbowText{
 0%{color:#ff0000;}
 16%{color:#ff7f00;}
@@ -201,7 +224,7 @@ audio{display:none;}
 </div>
 
 <div class="category-row">
-<div id="songCategory" class="category-container"></div>
+<div id="songCategory"></div>
 
 <div class="equalizer">
 <span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span>
@@ -216,7 +239,7 @@ audio{display:none;}
 
 <div id="volumeContainer" style="display:none;">
 <span>🔉</span>
-<input id="volume" type="range">
+<input id="volume" type="range" min="0" max="1" step="0.01" value="1">
 <span>🔊</span>
 </div>
 </div>
@@ -250,25 +273,69 @@ const titleContainer=document.getElementById("titleContainer");
 
 audio.volume=1;
 
-volume.addEventListener("input",()=>audio.volume=volume.value);
+/* ===== RGB VOLUME ===== */
+volume.addEventListener("input",()=>{
+audio.volume=volume.value;
+});
 
+/* ===== EQ AUDIO ANALYSER ===== */
+let ctx, analyser, source, data;
+
+function setupAnalyzer(){
+if(ctx) return;
+ctx=new(window.AudioContext||window.webkitAudioContext)();
+analyser=ctx.createAnalyser();
+analyser.fftSize=128;
+source=ctx.createMediaElementSource(audio);
+source.connect(analyser);
+analyser.connect(ctx.destination);
+data=new Uint8Array(analyser.frequencyBinCount);
+animateEQ();
+}
+
+/* ===== EQ ANIMATION ===== */
+function animateEQ(){
+requestAnimationFrame(animateEQ);
+if(!analyser) return;
+
+analyser.getByteFrequencyData(data);
+
+bars.forEach((bar,i)=>{
+const mapping=[2,4,6,9,13,18,24,32,32,24,18,13,9,6,4,2];
+
+let v=data[mapping[i]]||0;
+const h=Math.max(3,Math.min(22,v/10));
+
+bar.style.height=h+"px";
+
+bar.classList.remove("eq-red","eq-orange","eq-yellow","eq-green","eq-cyan","eq-blue","eq-purple","eq-pink");
+
+if(h<5) bar.classList.add("eq-red");
+else if(h<8) bar.classList.add("eq-orange");
+else if(h<11) bar.classList.add("eq-yellow");
+else if(h<14) bar.classList.add("eq-green");
+else if(h<17) bar.classList.add("eq-cyan");
+else if(h<19) bar.classList.add("eq-blue");
+else if(h<21) bar.classList.add("eq-purple");
+else bar.classList.add("eq-pink");
+});
+}
+
+/* ===== SONGS ===== */
 function loadSong(i){
-titleContainer.classList.remove("start-centered");
-
 currentIndex=i;
 const s=songs[i];
 
-audio.src=s.file;
 audio.pause();
+audio.src=s.file;
 
 title.textContent=s.title;
 category.textContent=s.category;
 
 btn.style.display="block";
-volumeContainer.style.display="block";
+volumeContainer.style.display="flex";
 
 btn.textContent="🔊 Play Now";
-btn.classList.remove("rgb-bg");
 }
 
 document.getElementById("prev").onclick=()=>{
@@ -281,13 +348,13 @@ loadSong(currentIndex>=songs.length-1?0:currentIndex+1);
 
 btn.onclick=async()=>{
 if(audio.paused){
+setupAnalyzer();
+if(ctx.state==="suspended") await ctx.resume();
 audio.play();
 btn.textContent="⏸️ Pause";
-btn.classList.add("rgb-bg");
 }else{
 audio.pause();
 btn.textContent="▶️ Play";
-btn.classList.remove("rgb-bg");
 }
 };
 </script>
