@@ -7,7 +7,7 @@
 
 <style>
 html {
-    background-color: #ff7f00;
+    background-color: #ff7f00; /* Außenfarbe */
     padding: 10px;
     box-sizing: border-box;
 }
@@ -15,26 +15,17 @@ html {
 body {
     margin: 0;
     min-height: calc(100vh - 20px);
-    background-color: #000;
-    font-family: Arial, sans-serif;
-    color: orange;
-    border-radius: 25px;
-    overflow: hidden;
-
     display: flex;
     justify-content: center;
     align-items: center;
+    background-color: #000000; /* Schwarzer Container */
+    font-family: Arial, sans-serif;
+    color: orange;
+
+    border-radius: 25px; /* Abgerundete Ecken */
+    overflow: hidden;
 }
 
-.main {
-    width: 100%;
-    max-width: 900px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-/* TITLE */
 .title-container{
 display:grid;
 grid-template-columns:auto auto auto auto auto;
@@ -52,7 +43,7 @@ left:50%;
 transform:translate(-50%,-50%);
 z-index:100;
 }
-
+          
 .rgb-animated{
 animation:rainbowText 5s linear infinite;
 }
@@ -66,7 +57,9 @@ text-shadow:0 0 8px currentColor,0 0 16px currentColor;
 transition:transform .2s ease;
 }
 
-.arrow:hover{ transform:scale(1.3); }
+.arrow:hover{
+transform:scale(1.3);
+}
 
 .emoji{
 display:inline-block;
@@ -75,14 +68,12 @@ font-size:0.9em;
 animation:glowRGB 3s linear infinite, dance 1.5s ease-in-out infinite;
 }
 
-/* CATEGORY */
 .category-row{
 display:flex;
 align-items:center;
 justify-content:center;
 gap:10px;
 margin-bottom:20px;
-flex-wrap:wrap;
 }
 
 .category-container{
@@ -90,22 +81,21 @@ font-size:1.2em;
 color:#ff7f00;
 }
 
-/* ===== EQ ===== */
 .equalizer{
 display:flex;
 align-items:flex-end;
 gap:2px;
 height:22px;
-margin-top:10px;
 }
 
 .bar{
 width:3px;
 height:3px;
 border-radius:999px;
-transition:all .05s linear;
+transition:all .06s linear;
 }
 
+/* EQ COLORS */
 .eq-red{background:#ff0033; box-shadow:0 0 6px #ff0033;}
 .eq-orange{background:#ff7a00; box-shadow:0 0 6px #ff7a00;}
 .eq-yellow{background:#ffd000; box-shadow:0 0 6px #ffd000;}
@@ -115,14 +105,11 @@ transition:all .05s linear;
 .eq-purple{background:#a800ff; box-shadow:0 0 6px #a800ff;}
 .eq-pink{background:#ff4fd8; box-shadow:0 0 6px #ff4fd8;}
 
-/* CONTROLS */
 .controls{
 display:flex;
 align-items:center;
-justify-content:center;
 gap:12px;
-margin-top:15px;
-flex-wrap:wrap;
+margin-top:10px;
 }
 
 button{
@@ -133,50 +120,67 @@ border-radius:8px;
 cursor:pointer;
 font-weight:bold;
 background:#FFA500;
-transition:transform .25s ease;
+transition:transform .25s ease, box-shadow .25s ease;
 }
 
-button:hover{ transform:scale(1.08); }
+button:hover{
+transform:scale(1.08);
+box-shadow:0 0 12px #FFA500,0 0 24px #FFA500;
+}
 
 button.rgb-bg{
 animation:rainbowBG 5s linear infinite;
 }
 
-/* ===== RGB VOLUME SLIDER ===== */
+/* VOLUME SLIDER */
 #volume{
 -webkit-appearance:none;
 appearance:none;
-width:140px;
-height:6px;
-border-radius:10px;
-background:linear-gradient(90deg,red,orange,yellow,green,cyan,blue,purple,red);
-outline:none;
+width:120px;
+height:22px;
+background:transparent;
 cursor:pointer;
-box-shadow:0 0 10px #ff9800;
 }
 
+/* RGB TRACK */
+#volume::-webkit-slider-runnable-track{
+height:6px;
+border-radius:10px;
+animation:rainbowBG 5s linear infinite;
+}
+
+#volume::-moz-range-track{
+height:6px;
+border-radius:10px;
+animation:rainbowBG 5s linear infinite;
+}
+
+/* RGB THUMB */
 #volume::-webkit-slider-thumb{
 -webkit-appearance:none;
+appearance:none;
 width:16px;
 height:16px;
 border-radius:50%;
-background:white;
-border:2px solid black;
-box-shadow:0 0 10px red,0 0 20px blue;
+background:#ff9800;
+border:2px solid #000;
+animation:rainbowText 5s linear infinite;
+box-shadow:0 0 8px currentColor,0 0 16px currentColor,0 0 24px currentColor;
+margin-top:-4px;
 }
 
 #volume::-moz-range-thumb{
 width:16px;
 height:16px;
 border-radius:50%;
-background:white;
-border:2px solid black;
+background:#ff9800;
+border:2px solid #000;
+animation:rainbowText 5s linear infinite;
+box-shadow:0 0 8px currentColor,0 0 16px currentColor,0 0 24px currentColor;
 }
 
-/* AUDIO */
 audio{display:none;}
 
-/* ANIMATIONEN */
 @keyframes rainbowText{
 0%{color:#ff0000;}
 16%{color:#ff7f00;}
@@ -198,22 +202,36 @@ audio{display:none;}
 }
 
 @keyframes glowRGB{
-0%{text-shadow:0 0 8px red;}
-50%{text-shadow:0 0 16px cyan;}
-100%{text-shadow:0 0 8px red;}
+0%{text-shadow:0 0 8px red,0 0 16px red;}
+16%{text-shadow:0 0 8px orange,0 0 16px orange;}
+32%{text-shadow:0 0 8px yellow,0 0 16px yellow;}
+48%{text-shadow:0 0 8px lime,0 0 16px lime;}
+64%{text-shadow:0 0 8px cyan,0 0 16px cyan;}
+80%{text-shadow:0 0 8px violet,0 0 16px violet;}
+100%{text-shadow:0 0 8px red,0 0 16px red;}
 }
 
 @keyframes dance{
-0%{transform:translateY(0) rotate(-8deg);}
-50%{transform:translateY(-6px) rotate(8deg);}
-100%{transform:translateY(0) rotate(-8deg);}
+0%{
+transform:translateY(0) rotate(-8deg) scale(1);
+}
+25%{
+transform:translateY(-8px) rotate(8deg) scale(1.15);
+}
+50%{
+transform:translateY(0) rotate(-8deg) scale(1);
+}
+75%{
+transform:translateY(-6px) rotate(8deg) scale(1.1);
+}
+100%{
+transform:translateY(0) rotate(-8deg) scale(1);
+}
 }
 </style>
 </head>
 
 <body>
-
-<div class="main">
 
 <div class="title-container start-centered" id="titleContainer">
 <span id="prev" class="arrow">⬅️</span>
@@ -224,7 +242,7 @@ audio{display:none;}
 </div>
 
 <div class="category-row">
-<div id="songCategory"></div>
+<div id="songCategory" class="category-container"></div>
 
 <div class="equalizer">
 <span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span>
@@ -245,8 +263,6 @@ audio{display:none;}
 </div>
 
 <audio id="audio"></audio>
-
-</div>
 
 <script>
 const songs=[
@@ -269,16 +285,18 @@ const category=document.getElementById("songCategory");
 const volume=document.getElementById("volume");
 const volumeContainer=document.getElementById("volumeContainer");
 const bars=document.querySelectorAll(".bar");
-const titleContainer=document.getElementById("titleContainer");
 
 audio.volume=1;
 
-/* ===== RGB VOLUME ===== */
 volume.addEventListener("input",()=>{
 audio.volume=volume.value;
 });
 
-/* ===== EQ AUDIO ANALYSER ===== */
+audio.addEventListener("ended",()=>{
+btn.textContent="▶️ Play";
+btn.classList.remove("rgb-bg");
+});
+
 let ctx, analyser, source, data;
 
 function setupAnalyzer(){
@@ -290,25 +308,82 @@ source=ctx.createMediaElementSource(audio);
 source.connect(analyser);
 analyser.connect(ctx.destination);
 data=new Uint8Array(analyser.frequencyBinCount);
-animateEQ();
+animate();
 }
 
-/* ===== EQ ANIMATION ===== */
-function animateEQ(){
-requestAnimationFrame(animateEQ);
+function loadSong(i){
+
+titleContainer.classList.remove("start-centered");
+
+currentIndex=i;
+const s=songs[i];
+
+
+audio.pause();
+audio.src=s.file;
+
+title.textContent=s.title;
+category.textContent=s.category;
+
+btn.style.display="block";
+volumeContainer.style.display="block";
+
+btn.textContent="🔊 Play Now";
+btn.classList.remove("rgb-bg");
+}
+
+document.getElementById("prev").onclick=()=>{
+loadSong(currentIndex===-1?songs.length-1:(currentIndex-1+songs.length)%songs.length);
+};
+
+document.getElementById("next").onclick=()=>{
+loadSong(currentIndex===-1?0:(currentIndex+1)%songs.length);
+};
+
+btn.onclick=async()=>{
+if(audio.paused){
+setupAnalyzer();
+if(ctx.state==="suspended") await ctx.resume();
+audio.play();
+btn.textContent="⏸️ Pause";
+btn.classList.add("rgb-bg");
+}else{
+audio.pause();
+btn.textContent="▶️ Play";
+btn.classList.remove("rgb-bg");
+}
+};
+
+function animate(){
+requestAnimationFrame(animate);
 if(!analyser) return;
 
 analyser.getByteFrequencyData(data);
 
 bars.forEach((bar,i)=>{
-const mapping=[2,4,6,9,13,18,24,32,32,24,18,13,9,6,4,2];
+// 🔥 HIER IST DIE ÄNDERUNG (gespiegelt)
+const mirror=Math.min(i,bars.length-1-i);
 
-let v=data[mapping[i]]||0;
+const mapping=[
+2,4,6,9,13,18,24,32,
+32,24,18,13,9,6,4,2
+];
+
+let v=data[mapping[i]] || 0;
+
+// mittlere 4 Balken stärker machen
+if(i>=6 && i<=9){
+    v*=1.0;
+}
+
 const h=Math.max(3,Math.min(22,v/10));
 
 bar.style.height=h+"px";
 
-bar.classList.remove("eq-red","eq-orange","eq-yellow","eq-green","eq-cyan","eq-blue","eq-purple","eq-pink");
+bar.classList.remove(
+"eq-red","eq-orange","eq-yellow","eq-green",
+"eq-cyan","eq-blue","eq-purple","eq-pink"
+);
 
 if(h<5) bar.classList.add("eq-red");
 else if(h<8) bar.classList.add("eq-orange");
@@ -320,44 +395,7 @@ else if(h<21) bar.classList.add("eq-purple");
 else bar.classList.add("eq-pink");
 });
 }
-
-/* ===== SONGS ===== */
-function loadSong(i){
-currentIndex=i;
-const s=songs[i];
-
-audio.pause();
-audio.src=s.file;
-
-title.textContent=s.title;
-category.textContent=s.category;
-
-btn.style.display="block";
-volumeContainer.style.display="flex";
-
-btn.textContent="🔊 Play Now";
-}
-
-document.getElementById("prev").onclick=()=>{
-loadSong(currentIndex<=0?songs.length-1:currentIndex-1);
-};
-
-document.getElementById("next").onclick=()=>{
-loadSong(currentIndex>=songs.length-1?0:currentIndex+1);
-};
-
-btn.onclick=async()=>{
-if(audio.paused){
-setupAnalyzer();
-if(ctx.state==="suspended") await ctx.resume();
-audio.play();
-btn.textContent="⏸️ Pause";
-}else{
-audio.pause();
-btn.textContent="▶️ Play";
-}
-};
 </script>
 
 </body>
-</html>
+</html> mach alles so das es in den Container passt lass sonst alles unverändert vom Aufbau
