@@ -20,7 +20,7 @@ body {
   align-items: center;
 }
 
-/* APP WRAPPER */
+/* APP */
 .app {
   display: flex;
   flex-direction: column;
@@ -135,39 +135,71 @@ button.rgb-bg {
   animation: rainbowBG 5s linear infinite;
 }
 
-/* 🎛️ VOLUME RGB */
+/* 🎛️ VOLUME RGB SLIDER (dein Original Style zurück) */
 .volume-wrap {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
+/* TRACK */
 #volume {
   -webkit-appearance: none;
   appearance: none;
   width: 140px;
+  height: 18px;
   background: transparent;
   cursor: pointer;
 }
 
-/* TRACK */
+/* RGB TRACK */
 #volume::-webkit-slider-runnable-track {
   height: 6px;
   border-radius: 10px;
   animation: rainbowBG 5s linear infinite;
 }
 
-/* THUMB */
+#volume::-moz-range-track {
+  height: 6px;
+  border-radius: 10px;
+  animation: rainbowBG 5s linear infinite;
+}
+
+/* ORANGE RGB GLOW KUGEL */
 #volume::-webkit-slider-thumb {
   -webkit-appearance: none;
-  width: 16px;
-  height: 16px;
+  appearance: none;
+
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+
+  background: #ff9800;
+
+  box-shadow:
+    0 0 6px #ff9800,
+    0 0 12px #ff9800,
+    0 0 18px #ff9800,
+    0 0 25px currentColor;
+
+  animation: rainbowText 5s linear infinite;
+
+  margin-top: -6px;
+}
+
+#volume::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
   border-radius: 50%;
   background: #ff9800;
-  border: 2px solid #000;
+
+  box-shadow:
+    0 0 6px #ff9800,
+    0 0 12px #ff9800,
+    0 0 18px #ff9800,
+    0 0 25px currentColor;
+
   animation: rainbowText 5s linear infinite;
-  box-shadow: 0 0 10px currentColor;
-  margin-top: -5px;
 }
 
 /* AUDIO */
