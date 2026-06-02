@@ -7,7 +7,7 @@
 
 <style>
 html {
-    background-color: #ff7f00; /* Außenfarbe */
+    background-color: #ff7f00;
     padding: 10px;
     box-sizing: border-box;
 }
@@ -18,14 +18,16 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #000000; /* Schwarzer Container */
+    background-color: #000000;
     font-family: Arial, sans-serif;
     color: orange;
 
-    border-radius: 25px; /* Abgerundete Ecken */
+    border-radius: 25px;
     overflow: hidden;
+    position: relative;
 }
 
+/* TITLE */
 .title-container{
 display:grid;
 grid-template-columns:auto auto auto auto auto;
@@ -33,15 +35,18 @@ align-items:center;
 justify-content:center;
 column-gap:6px;
 font-size:1.1em;
-margin-bottom:25px;
+margin-bottom:18px;
+width:100%;
+max-width:90%;
 }
 
 .start-centered{
-position:fixed;
-top:50%;
-left:50%;
-transform:translate(-50%,-50%);
+position:relative;
+top:auto;
+left:auto;
+transform:none;
 z-index:100;
+margin-top:20px;
 }
           
 .rgb-animated{
@@ -70,15 +75,19 @@ animation:glowRGB 3s linear infinite, dance 1.5s ease-in-out infinite;
 
 .category-row{
 display:flex;
+flex-wrap:wrap;
 align-items:center;
 justify-content:center;
 gap:10px;
-margin-bottom:20px;
+margin-bottom:15px;
+width:100%;
+max-width:95%;
 }
 
 .category-container{
-font-size:1.2em;
+font-size:1.1em;
 color:#ff7f00;
+text-align:center;
 }
 
 .equalizer{
@@ -86,6 +95,7 @@ display:flex;
 align-items:flex-end;
 gap:2px;
 height:22px;
+flex-wrap:nowrap;
 }
 
 .bar{
@@ -107,9 +117,13 @@ transition:all .06s linear;
 
 .controls{
 display:flex;
+flex-wrap:wrap;
 align-items:center;
+justify-content:center;
 gap:12px;
 margin-top:10px;
+width:100%;
+max-width:95%;
 }
 
 button{
@@ -132,17 +146,17 @@ button.rgb-bg{
 animation:rainbowBG 5s linear infinite;
 }
 
-/* VOLUME SLIDER */
+/* VOLUME */
 #volume{
 -webkit-appearance:none;
 appearance:none;
 width:120px;
+max-width:40vw;
 height:22px;
 background:transparent;
 cursor:pointer;
 }
 
-/* RGB TRACK */
 #volume::-webkit-slider-runnable-track{
 height:6px;
 border-radius:10px;
@@ -155,7 +169,6 @@ border-radius:10px;
 animation:rainbowBG 5s linear infinite;
 }
 
-/* RGB THUMB */
 #volume::-webkit-slider-thumb{
 -webkit-appearance:none;
 appearance:none;
@@ -212,21 +225,11 @@ audio{display:none;}
 }
 
 @keyframes dance{
-0%{
-transform:translateY(0) rotate(-8deg) scale(1);
-}
-25%{
-transform:translateY(-8px) rotate(8deg) scale(1.15);
-}
-50%{
-transform:translateY(0) rotate(-8deg) scale(1);
-}
-75%{
-transform:translateY(-6px) rotate(8deg) scale(1.1);
-}
-100%{
-transform:translateY(0) rotate(-8deg) scale(1);
-}
+0%{transform:translateY(0) rotate(-8deg) scale(1);}
+25%{transform:translateY(-8px) rotate(8deg) scale(1.15);}
+50%{transform:translateY(0) rotate(-8deg) scale(1);}
+75%{transform:translateY(-6px) rotate(8deg) scale(1.1);}
+100%{transform:translateY(0) rotate(-8deg) scale(1);}
 }
 </style>
 </head>
@@ -285,6 +288,7 @@ const category=document.getElementById("songCategory");
 const volume=document.getElementById("volume");
 const volumeContainer=document.getElementById("volumeContainer");
 const bars=document.querySelectorAll(".bar");
+const titleContainer=document.getElementById("titleContainer");
 
 audio.volume=1;
 
@@ -317,7 +321,6 @@ titleContainer.classList.remove("start-centered");
 
 currentIndex=i;
 const s=songs[i];
-
 
 audio.pause();
 audio.src=s.file;
@@ -361,17 +364,10 @@ if(!analyser) return;
 analyser.getByteFrequencyData(data);
 
 bars.forEach((bar,i)=>{
-// 🔥 HIER IST DIE ÄNDERUNG (gespiegelt)
-const mirror=Math.min(i,bars.length-1-i);
-
-const mapping=[
-2,4,6,9,13,18,24,32,
-32,24,18,13,9,6,4,2
-];
+const mapping=[2,4,6,9,13,18,24,32,32,24,18,13,9,6,4,2];
 
 let v=data[mapping[i]] || 0;
 
-// mittlere 4 Balken stärker machen
 if(i>=6 && i<=9){
     v*=1.0;
 }
