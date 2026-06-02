@@ -6,18 +6,28 @@
 <title>Sunny's Songs Playlist</title>
 
 <style>
-html,body{
-height:100%;
-margin:0;
-padding:0;
-background:#000;
-color:#fff;
-font-family:sans-serif;
-display:flex;
-justify-content:center;
-align-items:center;
-flex-direction:column;
-text-align:center;
+html {
+    background-color: #ff7f00;
+    padding: 12px;
+    box-sizing: border-box;
+    height: 100%;
+}
+
+body {
+    height: calc(100vh - 24px);
+    margin: 0;
+    background:#000;
+    color:#fff;
+    font-family:sans-serif;
+
+    border-radius: 25px;
+    overflow: hidden;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+    text-align:center;
 }
 
 .title-container{
@@ -89,7 +99,6 @@ border-radius:999px;
 transition:all .06s linear;
 }
 
-/* EQ COLORS */
 .eq-red{background:#ff0033; box-shadow:0 0 6px #ff0033;}
 .eq-orange{background:#ff7a00; box-shadow:0 0 6px #ff7a00;}
 .eq-yellow{background:#ffd000; box-shadow:0 0 6px #ffd000;}
@@ -126,7 +135,6 @@ button.rgb-bg{
 animation:rainbowBG 5s linear infinite;
 }
 
-/* VOLUME SLIDER */
 #volume{
 -webkit-appearance:none;
 appearance:none;
@@ -136,7 +144,6 @@ background:transparent;
 cursor:pointer;
 }
 
-/* RGB TRACK */
 #volume::-webkit-slider-runnable-track{
 height:6px;
 border-radius:10px;
@@ -149,7 +156,6 @@ border-radius:10px;
 animation:rainbowBG 5s linear infinite;
 }
 
-/* RGB THUMB */
 #volume::-webkit-slider-thumb{
 -webkit-appearance:none;
 appearance:none;
@@ -206,21 +212,11 @@ audio{display:none;}
 }
 
 @keyframes dance{
-0%{
-transform:translateY(0) rotate(-8deg) scale(1);
-}
-25%{
-transform:translateY(-8px) rotate(8deg) scale(1.15);
-}
-50%{
-transform:translateY(0) rotate(-8deg) scale(1);
-}
-75%{
-transform:translateY(-6px) rotate(8deg) scale(1.1);
-}
-100%{
-transform:translateY(0) rotate(-8deg) scale(1);
-}
+0%{transform:translateY(0) rotate(-8deg) scale(1);}
+25%{transform:translateY(-8px) rotate(8deg) scale(1.15);}
+50%{transform:translateY(0) rotate(-8deg) scale(1);}
+75%{transform:translateY(-6px) rotate(8deg) scale(1.1);}
+100%{transform:translateY(0) rotate(-8deg) scale(1);}
 }
 </style>
 </head>
@@ -279,6 +275,7 @@ const category=document.getElementById("songCategory");
 const volume=document.getElementById("volume");
 const volumeContainer=document.getElementById("volumeContainer");
 const bars=document.querySelectorAll(".bar");
+const titleContainer=document.getElementById("titleContainer");
 
 audio.volume=1;
 
@@ -311,7 +308,6 @@ titleContainer.classList.remove("start-centered");
 
 currentIndex=i;
 const s=songs[i];
-
 
 audio.pause();
 audio.src=s.file;
@@ -355,8 +351,6 @@ if(!analyser) return;
 analyser.getByteFrequencyData(data);
 
 bars.forEach((bar,i)=>{
-// 🔥 HIER IST DIE ÄNDERUNG (gespiegelt)
-const mirror=Math.min(i,bars.length-1-i);
 
 const mapping=[
 2,4,6,9,13,18,24,32,
@@ -365,7 +359,6 @@ const mapping=[
 
 let v=data[mapping[i]] || 0;
 
-// mittlere 4 Balken stärker machen
 if(i>=6 && i<=9){
     v*=1.0;
 }
