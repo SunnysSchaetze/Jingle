@@ -18,6 +18,8 @@ justify-content:center;
 align-items:center;
 flex-direction:column;
 text-align:center;
+border-radius:20px;   /* <<< NEU: Ecken außen */
+overflow:hidden;      /* <<< NEU: damit Rundung sauber wirkt */
 }
 
 .title-container{
@@ -126,8 +128,51 @@ button.rgb-bg{
 animation:rainbowBG 5s linear infinite;
 }
 
+/* VOLUME SLIDER */
 #volume{
+-webkit-appearance:none;
+appearance:none;
 width:120px;
+height:22px;
+background:transparent;
+cursor:pointer;
+}
+
+/* RGB TRACK */
+#volume::-webkit-slider-runnable-track{
+height:6px;
+border-radius:10px;
+animation:rainbowBG 5s linear infinite;
+}
+
+#volume::-moz-range-track{
+height:6px;
+border-radius:10px;
+animation:rainbowBG 5s linear infinite;
+}
+
+/* RGB THUMB */
+#volume::-webkit-slider-thumb{
+-webkit-appearance:none;
+appearance:none;
+width:16px;
+height:16px;
+border-radius:50%;
+background:#ff9800;
+border:2px solid #000;
+animation:rainbowText 5s linear infinite;
+box-shadow:0 0 8px currentColor,0 0 16px currentColor,0 0 24px currentColor;
+margin-top:-4px;
+}
+
+#volume::-moz-range-thumb{
+width:16px;
+height:16px;
+border-radius:50%;
+background:#ff9800;
+border:2px solid #000;
+animation:rainbowText 5s linear infinite;
+box-shadow:0 0 8px currentColor,0 0 16px currentColor,0 0 24px currentColor;
 }
 
 audio{display:none;}
@@ -142,20 +187,42 @@ audio{display:none;}
 100%{color:#ff0000;}
 }
 
+@keyframes rainbowBG{
+0%{background:#ff0000;}
+16%{background:#ff7f00;}
+32%{background:#ffff00;}
+48%{background:#00ff00;}
+64%{background:#00ffff;}
+80%{background:#8b00ff;}
+100%{background:#ff0000;}
+}
+
 @keyframes glowRGB{
-0%{text-shadow:0 0 8px red;}
-25%{text-shadow:0 0 8px orange;}
-50%{text-shadow:0 0 8px lime;}
-75%{text-shadow:0 0 8px cyan;}
-100%{text-shadow:0 0 8px red;}
+0%{text-shadow:0 0 8px red,0 0 16px red;}
+16%{text-shadow:0 0 8px orange,0 0 16px orange;}
+32%{text-shadow:0 0 8px yellow,0 0 16px yellow;}
+48%{text-shadow:0 0 8px lime,0 0 16px lime;}
+64%{text-shadow:0 0 8px cyan,0 0 16px cyan;}
+80%{text-shadow:0 0 8px violet,0 0 16px violet;}
+100%{text-shadow:0 0 8px red,0 0 16px red;}
 }
 
 @keyframes dance{
-0%{transform:translateY(0) rotate(-8deg) scale(1);}
-25%{transform:translateY(-8px) rotate(8deg) scale(1.15);}
-50%{transform:translateY(0) rotate(-8deg) scale(1);}
-75%{transform:translateY(-6px) rotate(8deg) scale(1.1);}
-100%{transform:translateY(0) rotate(-8deg) scale(1);}
+0%{
+transform:translateY(0) rotate(-8deg) scale(1);
+}
+25%{
+transform:translateY(-8px) rotate(8deg) scale(1.15);
+}
+50%{
+transform:translateY(0) rotate(-8deg) scale(1);
+}
+75%{
+transform:translateY(-6px) rotate(8deg) scale(1.1);
+}
+100%{
+transform:translateY(0) rotate(-8deg) scale(1);
+}
 }
 </style>
 </head>
@@ -195,14 +262,14 @@ audio{display:none;}
 
 <script>
 const songs=[
-  {title:"Der kleine Jingle",file:"Jingle.aac",category:"Sunny's Schätze"},
-  {title:"Cha-La Head-Cha-La",file:"Cha-La Head-Cha-La.aac",category:"Dragonball Z"},
-  {title:"Die Legende",file:"Die Legende.aac",category:"One Piece"},
-  {title:"Leb deinen Traum",file:"Leb deinen Traum.aac",category:"Digimon"},
-  {title:"Frei wie der Wind",file:"Frei wie der Wind.aac",category:"Monster Rancher"},
-  {title:"Last Unicorn",file:"Last Unicorn.aac",category:"Das Letzte Einhorn"},
-  {title:"Leaves from the Vine",file:"Leaves from the Vine.aac",category:"Avatar – Der Herr der Elemente"},
-  {title:"Heidruns Schlaflied",file:"Heidruns Schlaflied.aac",category:"DreamWorks Dragons"}
+{title:"Der kleine Jingle",file:"Jingle.aac",category:"Sunny's Schätze"},
+{title:"Cha-La Head-Cha-La",file:"Cha-La Head-Cha-La.aac",category:"Dragonball Z"},
+{title:"Die Legende",file:"Die Legende.aac",category:"One Piece"},
+{title:"Leb deinen Traum",file:"Leb deinen Traum.aac",category:"Digimon"},
+{title:"Frei wie der Wind",file:"Frei wie der Wind.aac",category:"Monster Rancher"},
+{title:"Last Unicorn",file:"Last Unicorn.aac",category:"Das Letzte Einhorn"},
+{title:"Leaves from the Vine",file:"Leaves from the Vine.aac",category:"Avatar – Der Herr der Elemente"},
+{title:"Heidruns Schlaflied",file:"Heidruns Schlaflied.aac",category:"DreamWorks Dragons"}
 ];
 
 let currentIndex=-1;
@@ -214,7 +281,6 @@ const category=document.getElementById("songCategory");
 const volume=document.getElementById("volume");
 const volumeContainer=document.getElementById("volumeContainer");
 const bars=document.querySelectorAll(".bar");
-const titleContainer=document.getElementById("titleContainer");
 
 audio.volume=1;
 
@@ -231,7 +297,7 @@ let ctx, analyser, source, data;
 
 function setupAnalyzer(){
 if(ctx) return;
-ctx=new (window.AudioContext||window.webkitAudioContext)();
+ctx=new(window.AudioContext||window.webkitAudioContext)();
 analyser=ctx.createAnalyser();
 analyser.fftSize=128;
 source=ctx.createMediaElementSource(audio);
@@ -255,7 +321,7 @@ title.textContent=s.title;
 category.textContent=s.category;
 
 btn.style.display="block";
-volumeContainer.style.display="flex";
+volumeContainer.style.display="block";
 
 btn.textContent="🔊 Play Now";
 btn.classList.remove("rgb-bg");
@@ -291,12 +357,16 @@ analyser.getByteFrequencyData(data);
 
 bars.forEach((bar,i)=>{
 const mapping=[2,4,6,9,13,18,24,32,32,24,18,13,9,6,4,2];
-let v=data[mapping[i]]||0;
+let v=data[mapping[i]] || 0;
 
 const h=Math.max(3,Math.min(22,v/10));
+
 bar.style.height=h+"px";
 
-bar.classList.remove("eq-red","eq-orange","eq-yellow","eq-green","eq-cyan","eq-blue","eq-purple","eq-pink");
+bar.classList.remove(
+"eq-red","eq-orange","eq-yellow","eq-green",
+"eq-cyan","eq-blue","eq-purple","eq-pink"
+);
 
 if(h<5) bar.classList.add("eq-red");
 else if(h<8) bar.classList.add("eq-orange");
