@@ -23,10 +23,29 @@ body {
     height: 100%;
     margin: 0;
 
-    background: #000;
+    background:
+        linear-gradient(#000,#000) padding-box,
+        linear-gradient(
+            135deg,
+            #ff7f00 0%,
+            #ffd36a 15%,
+            #fff4b0 28%,
+            #ffea00 40%,
+            #ffffff 50%,
+            #ffcf4a 62%,
+            #ff8a00 76%,
+            #ffe38a 88%,
+            #ff7f00 100%
+        ) border-box;
+
+    background-size:
+        100% 100%,
+        300% 300%;
+
     color: #fff;
     font-family: sans-serif;
 
+    border: 3px solid transparent;
     border-radius: 25px;
     overflow: hidden;
 
@@ -37,6 +56,139 @@ body {
     text-align: center;
 
     cursor: default;
+
+    animation: holoOuter 8s ease-in-out infinite;
+}
+
+
+/* =========================================================
+   HOLOGRAFISCHER INNENRAHMEN
+   OHNE GLOW
+   ========================================================= */
+
+body::before {
+    content: "";
+
+    position: absolute;
+
+    top: 9px;
+    left: 9px;
+    right: 9px;
+    bottom: 9px;
+
+    padding: 2px;
+
+    border-radius: 18px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #ff7f00 0%,
+            #ffd36a 15%,
+            #fff4b0 28%,
+            #ffea00 40%,
+            #ffffff 50%,
+            #ffcf4a 62%,
+            #ff8a00 76%,
+            #ffe38a 88%,
+            #ff7f00 100%
+        );
+
+    background-size: 300% 300%;
+
+    pointer-events: none;
+
+    z-index: 1;
+
+    /*
+       Nur der Rahmen bleibt sichtbar.
+       Die Mitte bleibt vollständig transparent.
+    */
+
+    -webkit-mask:
+        linear-gradient(#000 0 0) content-box,
+        linear-gradient(#000 0 0);
+
+    -webkit-mask-composite: xor;
+
+    mask:
+        linear-gradient(#000 0 0) content-box,
+        linear-gradient(#000 0 0);
+
+    mask-composite: exclude;
+
+    animation: holoInner 8s ease-in-out infinite;
+}
+
+
+/* =========================================================
+   HOLOGRAFISCHER AUSSENRAHMEN
+   ========================================================= */
+
+@keyframes holoOuter {
+
+    0% {
+        background-position:
+            0 0,
+            0% 50%;
+    }
+
+    25% {
+        background-position:
+            0 0,
+            50% 0%;
+    }
+
+    50% {
+        background-position:
+            0 0,
+            100% 50%;
+    }
+
+    75% {
+        background-position:
+            0 0,
+            50% 100%;
+    }
+
+    100% {
+        background-position:
+            0 0,
+            0% 50%;
+    }
+}
+
+
+/* =========================================================
+   HOLOGRAFISCHER INNENRAHMEN
+   ========================================================= */
+
+@keyframes holoInner {
+
+    0% {
+        background-position:
+            0% 50%;
+    }
+
+    25% {
+        background-position:
+            50% 0%;
+    }
+
+    50% {
+        background-position:
+            100% 50%;
+    }
+
+    75% {
+        background-position:
+            50% 100%;
+    }
+
+    100% {
+        background-position:
+            0% 50%;
+    }
 }
 
 
@@ -902,7 +1054,7 @@ volume.addEventListener("input", () => {
 
 audio.addEventListener("ended", () => {
 
-    btn.textContent = "▶️ Play";
+    btn.textContent = "🔊 Play";
 
     btn.classList.remove("rgb-bg");
 
@@ -1127,9 +1279,7 @@ function animate() {
 
 
 /* =========================================================
-   =========================================================
    CURSOR-EFFEKT
-   =========================================================
    ========================================================= */
 
 let letzteX = 0;
@@ -1258,8 +1408,6 @@ function erzeugeBewegungsEffekt(
     }
 
 
-    /* Bewegungsrichtung */
-
     let nx = 0;
     let ny = 0;
 
@@ -1275,17 +1423,9 @@ function erzeugeBewegungsEffekt(
     }
 
 
-    /*
-        Der Effekt startet exakt
-        am Cursor und wandert
-        anschließend nach hinten.
-    */
-
     const trailX = x;
     const trailY = y;
 
-
-    /* Hauptstern */
 
     createGlitzer(
         trailX,
@@ -1295,8 +1435,6 @@ function erzeugeBewegungsEffekt(
         ny
     );
 
-
-    /* Staub */
 
     createStaub(
         trailX,
@@ -1329,8 +1467,6 @@ function erzeugeBewegungsEffekt(
     );
 
 
-    /* größerer Stern */
-
     if (Math.random() > .68) {
 
         createGlitzer(
@@ -1343,8 +1479,6 @@ function erzeugeBewegungsEffekt(
 
     }
 
-
-    /* schnelle Bewegung */
 
     if (entfernung > 15) {
 
@@ -1419,8 +1553,6 @@ function createGlitzer(
             : "glitzer";
 
 
-    /* Farbe */
-
     if (
         Math.random() < .5
     ) {
@@ -1440,8 +1572,6 @@ function createGlitzer(
     }
 
 
-    /* Größe */
-
     const size =
         grosser
             ? 10 + Math.random() * 5
@@ -1453,8 +1583,6 @@ function createGlitzer(
         size + "px"
     );
 
-
-    /* Seitliche Bewegung */
 
     const seitlich =
         (Math.random() - .5) * 5;
@@ -1471,8 +1599,6 @@ function createGlitzer(
         py * seitlich;
 
 
-    /* Mitte */
-
     const mx =
         sx -
         nx * (
@@ -1487,8 +1613,6 @@ function createGlitzer(
             Math.random() * 16
         );
 
-
-    /* Ende */
 
     const ex =
         mx -
@@ -1537,8 +1661,6 @@ function createGlitzer(
         ey + "px"
     );
 
-
-    /* Lebensdauer */
 
     const duration =
         900 +
@@ -1604,8 +1726,6 @@ function createStaub(
         "staub";
 
 
-    /* Farbe */
-
     if (
         Math.random() < .5
     ) {
@@ -1625,8 +1745,6 @@ function createStaub(
     }
 
 
-    /* Größe */
-
     const size =
         1.5 +
         Math.random() * 2.5;
@@ -1638,16 +1756,12 @@ function createStaub(
     );
 
 
-    /* Startposition */
-
     const startX =
         (Math.random() - .5) * 20;
 
     const startY =
         (Math.random() - .5) * 20;
 
-
-    /* Bewegung */
 
     const dx =
         (Math.random() - .5) * 48;
@@ -1673,8 +1787,6 @@ function createStaub(
         dy + "px"
     );
 
-
-    /* Lebensdauer */
 
     const duration =
         650 +
@@ -1718,8 +1830,6 @@ function klickEffekt(
     y
 ) {
 
-    /* Zentraler Blitz */
-
     const flash =
         document.createElement("div");
 
@@ -1740,8 +1850,6 @@ function klickEffekt(
     );
 
 
-    /* Explosionssterne */
-
     for (
         let i = 0;
         i < 18;
@@ -1756,8 +1864,6 @@ function klickEffekt(
 
     }
 
-
-    /* Explosionsstaub */
 
     for (
         let i = 0;
@@ -1812,8 +1918,6 @@ function createExplosionsGlitzer(
             : "glitzer";
 
 
-    /* Farbe */
-
     if (
         Math.random() < .5
     ) {
@@ -1833,8 +1937,6 @@ function createExplosionsGlitzer(
     }
 
 
-    /* Größe */
-
     const size =
         grosser
             ? 13 + Math.random() * 8
@@ -1847,15 +1949,11 @@ function createExplosionsGlitzer(
     );
 
 
-    /* Zufälliger Winkel */
-
     const winkel =
         Math.random() *
         Math.PI *
         2;
 
-
-    /* Entfernung */
 
     const entfernung =
         grosser
@@ -1863,16 +1961,12 @@ function createExplosionsGlitzer(
             : 35 + Math.random() * 70;
 
 
-    /* Start */
-
     const sx =
         (Math.random() - .5) * 6;
 
     const sy =
         (Math.random() - .5) * 6;
 
-
-    /* Mitte */
 
     const mx =
         Math.cos(winkel) *
@@ -1884,8 +1978,6 @@ function createExplosionsGlitzer(
         entfernung *
         .45;
 
-
-    /* Ende */
 
     const ex =
         Math.cos(winkel) *
@@ -1926,8 +2018,6 @@ function createExplosionsGlitzer(
         ey + "px"
     );
 
-
-    /* Explosionsgeschwindigkeit */
 
     const duration =
         500 +
@@ -1993,8 +2083,6 @@ function createExplosionStaub(
         "staub";
 
 
-    /* Farbe */
-
     if (
         Math.random() < .5
     ) {
@@ -2014,8 +2102,6 @@ function createExplosionStaub(
     }
 
 
-    /* Größe */
-
     const size =
         3 +
         Math.random() * 4;
@@ -2026,8 +2112,6 @@ function createExplosionStaub(
         size + "px"
     );
 
-
-    /* Zufällige Richtung */
 
     const winkel =
         Math.random() *
@@ -2066,8 +2150,6 @@ function createExplosionStaub(
         dy + "px"
     );
 
-
-    /* Lebensdauer */
 
     const duration =
         450 +
