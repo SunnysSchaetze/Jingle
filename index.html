@@ -58,6 +58,42 @@ body {
     cursor: default;
 
     animation: holoOuter 8s ease-in-out infinite;
+
+    position: relative;
+
+    /*
+       Innenabstand zum Rahmen.
+       Dadurch bleibt der komplette Inhalt
+       innerhalb des holografischen Innenrahmens.
+    */
+    padding: clamp(20px, 5vw, 45px);
+}
+
+
+/* =========================================================
+   INHALT IM RAHMEN HALTEN
+   ========================================================= */
+
+.title-container,
+.category-row,
+.controls {
+    position: relative;
+    z-index: 2;
+    max-width: 100%;
+}
+
+.title-container {
+    width: min(100%, 700px);
+}
+
+.category-row {
+    width: min(100%, 700px);
+}
+
+.controls {
+    max-width: 100%;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
 
@@ -99,11 +135,6 @@ body::before {
     pointer-events: none;
 
     z-index: 1;
-
-    /*
-       Nur der Rahmen bleibt sichtbar.
-       Die Mitte bleibt vollständig transparent.
-    */
 
     -webkit-mask:
         linear-gradient(#000 0 0) content-box,
@@ -207,10 +238,10 @@ body::before {
 }
 
 .start-centered {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    position: relative;
+    top: auto;
+    left: auto;
+    transform: none;
     z-index: 100;
 }
 
@@ -253,6 +284,11 @@ body::before {
 .category-container {
     font-size: 1.2em;
     color: #ff7f00;
+
+    max-width: 100%;
+
+    overflow-wrap: anywhere;
+    word-break: break-word;
 }
 
 .equalizer {
@@ -260,6 +296,8 @@ body::before {
     align-items: flex-end;
     gap: 2px;
     height: 22px;
+
+    flex-shrink: 0;
 }
 
 .bar {
@@ -344,9 +382,13 @@ button.rgb-bg {
 #volume {
     -webkit-appearance: none;
     appearance: none;
-    width: 120px;
+
+    width: min(120px, 35vw);
+
     height: 22px;
+
     background: transparent;
+
     cursor: pointer;
 }
 
@@ -365,11 +407,16 @@ button.rgb-bg {
 #volume::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
+
     width: 16px;
     height: 16px;
+
     border-radius: 50%;
+
     background: #ff9800;
+
     border: 2px solid #000;
+
     animation: rainbowText 5s linear infinite;
 
     box-shadow:
@@ -383,9 +430,13 @@ button.rgb-bg {
 #volume::-moz-range-thumb {
     width: 16px;
     height: 16px;
+
     border-radius: 50%;
+
     background: #ff9800;
+
     border: 2px solid #000;
+
     animation: rainbowText 5s linear infinite;
 
     box-shadow:
@@ -849,6 +900,92 @@ audio {
 
     100% {
         transform:translateY(0) rotate(-8deg) scale(1);
+    }
+}
+
+
+/* =========================================================
+   SMARTPHONE
+   ========================================================= */
+
+@media (max-width: 500px) {
+
+    body {
+        padding: 18px 14px;
+    }
+
+    .title-container {
+        font-size: .95em;
+        column-gap: 2px;
+        margin-bottom: 18px;
+    }
+
+    .arrow {
+        margin: 0 2px;
+    }
+
+    .emoji {
+        margin: 0 2px;
+    }
+
+    .category-row {
+        gap: 6px;
+        margin-bottom: 15px;
+    }
+
+    .category-container {
+        font-size: 1em;
+    }
+
+    .controls {
+        gap: 7px;
+        margin-top: 6px;
+    }
+
+    button {
+        padding: 6px 12px;
+        font-size: .8em;
+    }
+
+    #volume {
+        width: 90px;
+    }
+}
+
+
+/* =========================================================
+   SEHR KLEINE SMARTPHONES
+   ========================================================= */
+
+@media (max-width: 360px) {
+
+    body {
+        padding: 16px 11px;
+    }
+
+    .title-container {
+        font-size: .82em;
+    }
+
+    .category-container {
+        font-size: .88em;
+    }
+
+    .equalizer {
+        gap: 1px;
+    }
+
+    .bar {
+        width: 2px;
+    }
+
+    button {
+        padding: 5px 9px;
+        font-size: .75em;
+    }
+
+    #volume {
+        width: 75px;
     }
 }
 
